@@ -18,6 +18,7 @@ namespace CameraCapture
         //déclaration des variables globales
         private Capture capture;                                                //prend les images depuis la camera
         private bool captureInProgress;                                         //boolean si la cam est en marche
+        private CascadeClassifier detector;                                     //permet la detection
         public CameraCapture()
         {
             InitializeComponent();
@@ -26,13 +27,33 @@ namespace CameraCapture
         private void ProcessFrame(object sender, EventArgs arg)
         {
             Image<Bgr, Byte> ImageFrame = capture.QueryFrame();                 //sauvegarde les images depuis la cam
+
+            if(ImageFrame != null){
+                //conversion en noir et blanc
+                Image<Gray, byte> grayframe = ImageFrame.Convert<Gray, byte>();
+
+                //definition de la taille min des visages detectés
+                Size min = new Size(250, 250);
+
+                //on enregistre les visages dans un tableau
+                var faces = detector.DetectMultiScale(grayframe, 1.1, 3,
+                    min,
+                    Size.Empty);
+
+                foreach(var face in faces)
+                {
+                    //on encadre les visages detectés
+                    ImageFrame.Draw(face, new Bgr(Color.Green), 3);
+                }
+            }
+
             CamImageBox.Image = ImageFrame;                                     //on le place dans l'imageBox pour l'afficher
-            //POur sauvegarder l'image > ImageFrame.Save(@"E:\MyPic.jpg");
+            //Pour sauvegarder l'image > ImageFrame.Save(@"E:\MyPic.jpg");
         }
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            #region if capture is not created, create it now
+            // si capture n'existe pas, on le créer
             if(capture == null)
             {
                 try
@@ -44,8 +65,7 @@ namespace CameraCapture
                     MessageBox.Show(excpt.Message);
                 }
             }
-            #endregion
-
+            
             if(capture != null)
             {
                 if (captureInProgress)
@@ -68,6 +88,30 @@ namespace CameraCapture
         {
             if (capture != null)
                 capture.Dispose();
+        }
+
+        private void CameraCapture_Load(object sender, EventArgs e)
+        {
+            detector = new CascadeClassifier("C:\\Users\\Rémy\\Documents\\visual studio 2015\\Projects\\CameraCapture\\CameraCapture\\bin\\Debug\\haarcascade_frontalface_default.xml");
+        }
+
+        private void btnCapture_Click(object sender, EventArgs e)
+        {
+            Image<Bgr, Byte> ImageFrameToCapture = capture.QueryFrame();
+
+            if (ImageFrameToCapture != null)
+            {
+                //conversion en noir et blanc
+                Image<Gray, byte> grayframe = ImageFrameToCapture.Convert<Gray, byte>();
+
+                CaptureImageBox.Image =  ImageFrameToCapture;
+                ImageFrameToCapture.Save(@"C:\Users\Rémy\Desktop\Photos\face" + DateTime.Now.ToString());
+            }
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
