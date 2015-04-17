@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using Emgu.Util;
+using System.Drawing.Imaging;
 
 namespace CameraCapture
 {
@@ -19,6 +20,12 @@ namespace CameraCapture
         private Capture capture;                                                //prend les images depuis la camera
         private bool captureInProgress;                                         //boolean si la cam est en marche
         private CascadeClassifier detector;                                     //permet la detection
+        private Rectangle face;
+        private Image<Bgr, Byte> ImageFrame;
+        private Image<Bgr, Byte> ImageFrameWithoutRect;
+        private Bitmap faceBmp = new Bitmap(340, 235);
+
+
         public CameraCapture()
         {
             InitializeComponent();
@@ -26,7 +33,8 @@ namespace CameraCapture
 
         private void ProcessFrame(object sender, EventArgs arg)
         {
-            Image<Bgr, Byte> ImageFrame = capture.QueryFrame();                 //sauvegarde les images depuis la cam
+            ImageFrame = capture.QueryFrame();                 //sauvegarde les images depuis la cam
+            ImageFrameWithoutRect = ImageFrame.Copy();
 
             if(ImageFrame != null){
                 //conversion en noir et blanc
@@ -37,18 +45,19 @@ namespace CameraCapture
 
                 //on enregistre les visages dans un tableau
                 var faces = detector.DetectMultiScale(grayframe, 1.1, 3,
-                    min,
-                    Size.Empty);
+                min,
+                Size.Empty);
 
-                foreach(var face in faces)
+                if(faces.Length != 0)
                 {
-                    //on encadre les visages detectés
-                    ImageFrame.Draw(face, new Bgr(Color.Green), 3);
-                }
+                    face = faces[0];
+                    face.Inflate(0,50);
+                    //on encadre le visages detectés
+                    ImageFrame.Draw(face, new Bgr(Color.Green), 4);
+                }   
             }
 
             CamImageBox.Image = ImageFrame;                                     //on le place dans l'imageBox pour l'afficher
-            //Pour sauvegarder l'image > ImageFrame.Save(@"E:\MyPic.jpg");
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -97,21 +106,28 @@ namespace CameraCapture
 
         private void btnCapture_Click(object sender, EventArgs e)
         {
-            Image<Bgr, Byte> ImageFrameToCapture = capture.QueryFrame();
-
-            if (ImageFrameToCapture != null)
+            if(capture != null)
             {
-                //conversion en noir et blanc
-                Image<Gray, byte> grayframe = ImageFrameToCapture.Convert<Gray, byte>();
-
-                CaptureImageBox.Image =  ImageFrameToCapture;
-                ImageFrameToCapture.Save(@"C:\Users\Rémy\Desktop\Photos\face" + DateTime.Now.ToString());
+                if (captureInProgress)
+                {
+                    if (!face.IsEmpty)
+                    {
+                        try{
+                            faceBmp = ImageFrameWithoutRect.Bitmap.Clone(face, System.Drawing.Imaging.PixelFormat.DontCare);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Veuillez centrer votre visage");
+                        }
+                        CaptureImageBox.Image = faceBmp;
+                    }
+                }
             }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-
+            faceBmp.Save("C:\\Users\\Rémy\\Desktop\\Photos\\" + textBoxNom.Text + "_" + textBoxPrenom.Text + ".png", ImageFormat.Png);
         }
     }
 }
