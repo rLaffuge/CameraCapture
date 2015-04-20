@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.Structure;
@@ -24,6 +18,7 @@ namespace CameraCapture
         private Image<Bgr, Byte> ImageFrame;
         private Image<Bgr, Byte> ImageFrameWithoutRect;
         private Bitmap faceBmp = new Bitmap(340, 235);
+        private Boolean faceDetected;
 
 
         public CameraCapture()
@@ -34,7 +29,14 @@ namespace CameraCapture
         private void ProcessFrame(object sender, EventArgs arg)
         {
             ImageFrame = capture.QueryFrame();                 //sauvegarde les images depuis la cam
-            ImageFrameWithoutRect = ImageFrame.Copy();
+            if (ImageFrame != null)
+            {
+                ImageFrameWithoutRect = ImageFrame.Copy();
+            }
+                
+
+
+
 
             if(ImageFrame != null){
                 //conversion en noir et blanc
@@ -54,7 +56,11 @@ namespace CameraCapture
                     face.Inflate(0,50);
                     //on encadre le visages detectés
                     ImageFrame.Draw(face, new Bgr(Color.Green), 4);
-                }   
+                    faceDetected = true;
+                }else
+                {
+                    faceDetected = false;
+                }
             }
 
             CamImageBox.Image = ImageFrame;                                     //on le place dans l'imageBox pour l'afficher
@@ -112,6 +118,7 @@ namespace CameraCapture
                 {
                     if (!face.IsEmpty)
                     {
+
                         try{
                             faceBmp = ImageFrameWithoutRect.Bitmap.Clone(face, System.Drawing.Imaging.PixelFormat.DontCare);
                         }
@@ -127,7 +134,10 @@ namespace CameraCapture
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            faceBmp.Save("C:\\Users\\Rémy\\Desktop\\Photos\\" + textBoxNom.Text + "_" + textBoxPrenom.Text + ".png", ImageFormat.Png);
+            DBConnect db = new DBConnect();
+            db.Insert(faceBmp, textBoxNom.Text, textBoxPrenom.Text);
+
+            //faceBmp.Save("C:\\Users\\Rémy\\Desktop\\Photos\\" + textBoxNom.Text + "_" + textBoxPrenom.Text + ".png", ImageFormat.Png);
         }
     }
 }
