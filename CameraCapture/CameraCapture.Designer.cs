@@ -54,6 +54,7 @@
             // 
             // btnStart
             // 
+            this.btnStart.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStart.Location = new System.Drawing.Point(12, 498);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(640, 40);
@@ -64,6 +65,7 @@
             // 
             // btnCapture
             // 
+            this.btnCapture.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCapture.Location = new System.Drawing.Point(667, 267);
             this.btnCapture.Name = "btnCapture";
             this.btnCapture.Size = new System.Drawing.Size(340, 40);
@@ -75,9 +77,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(664, 315);
+            this.label1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(663, 310);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(32, 13);
+            this.label1.Size = new System.Drawing.Size(51, 19);
             this.label1.TabIndex = 5;
             this.label1.Text = "Nom:";
             // 
@@ -91,9 +94,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(664, 359);
+            this.label2.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(663, 354);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(46, 13);
+            this.label2.Size = new System.Drawing.Size(75, 19);
             this.label2.TabIndex = 7;
             this.label2.Text = "Prénom:";
             // 
@@ -106,6 +110,7 @@
             // 
             // btnSave
             // 
+            this.btnSave.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.Location = new System.Drawing.Point(667, 402);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(340, 40);

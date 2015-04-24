@@ -39,7 +39,6 @@ namespace CameraCapture
             connection = new MySqlConnection(connectionString);
         }
 
-        
         public bool OpenConnection()
         {
             // ouverture de connexion sur la DB
@@ -87,8 +86,6 @@ namespace CameraCapture
             {
                 //creation de la commande avec la query et les parametre de connexion
                 MySqlCommand cmd = new MySqlCommand(query, connection);
-
-                
 
                 cmd.Parameters.Add("@nom", MySqlDbType.VarChar, 45);
                 cmd.Parameters.Add("@prenom", MySqlDbType.VarChar, 45);

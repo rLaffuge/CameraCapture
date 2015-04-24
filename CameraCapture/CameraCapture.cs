@@ -34,10 +34,6 @@ namespace CameraCapture
                 ImageFrameWithoutRect = ImageFrame.Copy();
             }
                 
-
-
-
-
             if(ImageFrame != null){
                 //conversion en noir et blanc
                 Image<Gray, byte> grayframe = ImageFrame.Convert<Gray, byte>();
