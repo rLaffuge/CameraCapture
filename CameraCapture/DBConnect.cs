@@ -56,6 +56,9 @@ namespace CameraCapture
                     case 1045:
                         MessageBox.Show("Le MDP/Nom d'utilisateur est incorrect.");
                         break;
+                    default:
+                        MessageBox.Show(ex.Message);
+                        break;
                 }
                 return false;
             }
